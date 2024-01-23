@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @Getter
-public abstract class CommandBase extends Command {
+public abstract class CommandBase extends Command implements me.underly0.underlyapi.api.command.Command {
     private final Plugin plugin;
     public CommandBase(Plugin plugin, String command, String... aliases) {
         this(false, plugin, command, aliases);
