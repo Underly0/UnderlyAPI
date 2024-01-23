@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import me.underly0.underlyapi.commons.database.DatabaseConfig;
 import org.bukkit.plugin.Plugin;
-import me.underly0.underlyapi.api.CacheUsing;
+import me.underly0.underlyapi.commons.CacheUsing;
 import me.underly0.underlyapi.api.database.Database;
 
 import java.sql.Connection;

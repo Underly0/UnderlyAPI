@@ -1,4 +1,4 @@
-package me.underly0.underlyapi.api;
+package me.underly0.underlyapi.commons;
 
 import com.google.common.collect.Sets;
 import me.underly0.underlyapi.api.database.Database;

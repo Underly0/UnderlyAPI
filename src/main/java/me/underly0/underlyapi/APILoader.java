@@ -1,6 +1,6 @@
 package me.underly0.underlyapi;
 
-import me.underly0.underlyapi.api.CacheUsing;
+import me.underly0.underlyapi.commons.CacheUsing;
 import me.underly0.underlyapi.api.database.Database;
 import me.underly0.underlyapi.service.menu.MenuService;
 import org.bukkit.plugin.java.JavaPlugin;

@@ -18,8 +18,6 @@ public interface Database {
     void executeUpdates(List<String> sql);
     List<Map<String, Object>> executeQuery(String sql, Object... replace);
     void reConnect();
-
     void closeSource();
-
     void close();
 }
