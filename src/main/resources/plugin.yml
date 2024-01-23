@@ -1,4 +1,4 @@
 name: UnderlyAPI
-version: '0.1-dev'
+version: '0.1.1-dev'
 author: Underly0
 main: me.underly0.underlyapi.APILoader

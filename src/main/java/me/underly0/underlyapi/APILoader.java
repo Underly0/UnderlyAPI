@@ -3,6 +3,7 @@ package me.underly0.underlyapi;
 import me.underly0.underlyapi.commons.CacheUsing;
 import me.underly0.underlyapi.api.database.Database;
 import me.underly0.underlyapi.service.menu.MenuService;
+import me.underly0.underlyapi.service.updater.UpdaterService;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class APILoader extends JavaPlugin {
@@ -20,6 +21,7 @@ public final class APILoader extends JavaPlugin {
         //initTests();
     }
     public void initServices() {
+        new UpdaterService(this, "Underly0", "UnderlyAPI");
         new MenuService(this);
     }
     public void initTests() {
