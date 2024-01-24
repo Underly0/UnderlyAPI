@@ -157,7 +157,7 @@ public class DatabaseImpl implements Database {
     @Override
     public Statement getStatement() {
         if (hasStatementNull())
-            statement = getConnection().prepareStatement("");
+            statement = getConnection().createStatement();
 
         return statement;
     }

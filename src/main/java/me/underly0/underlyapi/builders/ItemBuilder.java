@@ -7,6 +7,7 @@ import lombok.SneakyThrows;
 import me.underly0.underlyapi.api.replace.ListReplace;
 import me.underly0.underlyapi.utils.StringUtil;
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -49,8 +50,15 @@ public class ItemBuilder extends ItemStack {
 
     @SneakyThrows
     public void skull(String str) {
-        super.setType(Material.SKULL_ITEM);
-        super.setDurability((short) 3);
+        int version = Integer.parseInt(Bukkit.getBukkitVersion().split("\\.")[1]);
+        if (version >= 13) {
+            super.setType(Material.valueOf("PLAYER_HEAD"));
+        } else {
+            super.setType(Material.valueOf("SKULL_ITEM"));
+            super.setDurability((short) 3);
+        }
+
+
         SkullMeta meta = (SkullMeta) this.getItemMeta();
 
         GameProfile profile = new GameProfile(UUID.randomUUID(), "");

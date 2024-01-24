@@ -1,5 +1,5 @@
 name: UnderlyAPI
-version: '0.1.3-dev'
+version: '0.1.4-dev'
 author: Underly0
 website: "https://github.com/Underly0/UnderlyAPI"
 main: me.underly0.underlyapi.APILoader

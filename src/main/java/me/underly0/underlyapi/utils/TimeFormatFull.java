@@ -13,6 +13,7 @@ public class TimeFormatFull {
 
     public static String formatTime(long seconds) {
         if (seconds == -1) return "Никогда";
+        if (seconds == 0) return "0 " + units[3][2];
 
         long[] time = {
                 seconds / (24 * 3600),
