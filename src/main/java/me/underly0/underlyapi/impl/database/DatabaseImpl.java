@@ -19,7 +19,8 @@ import java.util.Map;
 
 public class DatabaseImpl implements Database {
 
-    @Getter private final Plugin plugin;
+    @Getter
+    private final Plugin plugin;
     private DatabaseConfig dbConfig;
     private HikariDataSource source;
     private Connection connection;
@@ -32,6 +33,7 @@ public class DatabaseImpl implements Database {
         connect();
         CacheUsing.CASHED_CONNECTIONS.add(this);
     }
+
     public DatabaseImpl(Plugin plugin) {
         this.plugin = plugin;
         connect();
@@ -78,7 +80,9 @@ public class DatabaseImpl implements Database {
 
     private void connect() {
         if (config == null)
-            config = dbConfig == null ? getHikariConfigSQLite() : getHikariConfigMysql();
+            config = dbConfig == null
+                    ? getHikariConfigSQLite()
+                    : getHikariConfigMysql();
 
         source = new HikariDataSource(config);
     }
@@ -119,11 +123,13 @@ public class DatabaseImpl implements Database {
     public boolean hasSourceNull() {
         return source == null || source.isClosed();
     }
+
     @Override
     @SneakyThrows
     public boolean hasConnectionNull() {
         return connection == null || connection.isClosed();
     }
+
     @Override
     @SneakyThrows
     public boolean hasStatementNull() {
@@ -137,6 +143,7 @@ public class DatabaseImpl implements Database {
 
         return source;
     }
+
     @SneakyThrows
     @Override
     public Connection getConnection() {
@@ -145,6 +152,7 @@ public class DatabaseImpl implements Database {
 
         return connection;
     }
+
     @SneakyThrows
     @Override
     public Statement getStatement() {
@@ -172,6 +180,7 @@ public class DatabaseImpl implements Database {
         if (!(source == null || source.isClosed()))
             source.close();
     }
+
     @Override
     public void close() {
         closeSource();

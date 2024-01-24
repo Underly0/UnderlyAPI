@@ -16,6 +16,8 @@ import java.util.Map;
 @Getter
 public abstract class CommandBase extends Command implements me.underly0.underlyapi.api.command.Command {
     private final Plugin plugin;
+    private final boolean async;
+
     public CommandBase(Plugin plugin, String command, String... aliases) {
         this(false, plugin, command, aliases);
     }
@@ -23,6 +25,7 @@ public abstract class CommandBase extends Command implements me.underly0.underly
     public CommandBase(boolean async, Plugin plugin, String command, String... aliases) {
         super(command);
         this.plugin = plugin;
+        this.async = async;
 
         if (aliases.length != 0)
             super.setAliases(Arrays.asList(aliases));
@@ -30,6 +33,15 @@ public abstract class CommandBase extends Command implements me.underly0.underly
 
     @Override
     public boolean execute(CommandSender sender, String lbl, String[] args) {
+        if (async)
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
+                    executeCommand(sender, lbl, args));
+        else
+            executeCommand(sender, lbl, args);
+        return true;
+    }
+
+    public void executeCommand(CommandSender sender, String lbl, String[] args) {
         PlayerPreCommandEvent preCommandEvent = null;
         Player player = null;
         if (sender instanceof Player) {
@@ -45,7 +57,6 @@ public abstract class CommandBase extends Command implements me.underly0.underly
                 Bukkit.getPluginManager().callEvent(useCommandEvent);
             }
         }
-        return true;
     }
 
     public abstract boolean command(CommandSender sender, String lbl, String[] args);
@@ -62,9 +73,11 @@ public abstract class CommandBase extends Command implements me.underly0.underly
     }
 
     public abstract List<String> tabComplete(CommandSender sender, String[] args);
+
     public void register() {
         Bukkit.getCommandMap().register(super.getName(), this);
     }
+
     public void unregister() {
         Map<String, Command> knownCommands = Bukkit.getCommandMap().getKnownCommands();
         knownCommands.values().removeIf(cmd -> cmd.getName().equalsIgnoreCase(super.getName()));
