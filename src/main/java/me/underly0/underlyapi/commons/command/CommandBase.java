@@ -1,9 +1,12 @@
 package me.underly0.underlyapi.commons.command;
 
 import lombok.Getter;
+import me.underly0.underlyapi.commons.command.event.list.PlayerPreCommandEvent;
+import me.underly0.underlyapi.commons.command.event.list.PlayerUseCommandEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Arrays;
@@ -27,11 +30,25 @@ public abstract class CommandBase extends Command implements me.underly0.underly
 
     @Override
     public boolean execute(CommandSender sender, String lbl, String[] args) {
-        command(sender, lbl, args);
+        PlayerPreCommandEvent preCommandEvent = null;
+        Player player = null;
+        if (sender instanceof Player) {
+            player = (Player) sender;
+            preCommandEvent = new PlayerPreCommandEvent(player, this);
+            Bukkit.getPluginManager().callEvent(preCommandEvent);
+        }
+
+        if (preCommandEvent == null || !preCommandEvent.isCancelled()) {
+            boolean isSuccess = command(sender, lbl, args);
+            if (player != null) {
+                PlayerUseCommandEvent useCommandEvent = new PlayerUseCommandEvent(player, this, isSuccess);
+                Bukkit.getPluginManager().callEvent(useCommandEvent);
+            }
+        }
         return true;
     }
 
-    public abstract void command(CommandSender sender, String lbl, String[] args);
+    public abstract boolean command(CommandSender sender, String lbl, String[] args);
 
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args)
