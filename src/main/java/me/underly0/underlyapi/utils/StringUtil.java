@@ -15,7 +15,7 @@ public class StringUtil {
     public static String color(String text) {
         int version = Integer.parseInt(Bukkit.getBukkitVersion().split("\\.")[1]);
         if (version >= 16)
-            text = text.replaceAll("#([0-9a-f]{6})", "&x&$1");
+            text = FormatChatColor.stylish(text);
 
         return ChatColor.translateAlternateColorCodes('&', text);
     }

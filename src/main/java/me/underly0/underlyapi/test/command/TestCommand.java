@@ -22,11 +22,12 @@ public class TestCommand extends CommandBase {
 
     @Override
     public List<String> tabComplete(CommandSender sender, String[] args) {
-        return TabCompleteBuilder.Builder(sender, args)
-                .addComplete(1, Arrays.asList("1231", "54", "Никита", "Овца"))
-                .addComplete(2, Collections.emptyList())
-                .addComplete(3, "как", "где")
-                .build();
+//        return TabCompleteBuilder.Builder(sender, args)
+//                .addComplete(1, Arrays.asList("1231", "54", "Никита", "Овца"))
+//                .addComplete(2, Collections.emptyList())
+//                .addComplete(3, "как", "где")
+//                .build();
+        return null;
     }
 
 }

@@ -7,7 +7,8 @@ import me.underly0.underlyapi.api.file.FileObject;
 public enum FileType implements FileObject {
     CONFIG("config.yml"),
     LOOT("loot.yml"),
-    DATA("data.yml");
+    DATA("data.yml"),
+    LANG("lang.yml");
 
     private final String fileName;
     FileType(String fileName) {
