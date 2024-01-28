@@ -73,12 +73,8 @@ public class ItemBuilder extends ItemStack {
 
 
     public void setMaterial(String[] material) {
-        if (StringUtils.isNumeric(material[0]))
-            super.setType(Material.getMaterial(Integer.parseInt(material[0])));
-
-        else if (material[0].length() > 30)
+        if (material[0].length() > 30)
             skull(material[0]);
-
         else
             super.setType(Material.valueOf(material[0].toUpperCase()));
 

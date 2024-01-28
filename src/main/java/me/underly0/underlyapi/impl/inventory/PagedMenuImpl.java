@@ -34,9 +34,8 @@ public class PagedMenuImpl implements PagedMenu {
     public PagedMenu addPages(int pages) {
         for (int i = 0; i < inventories.size(); i++) {
             Menu inv = inventories.get(i);
-            String title = inv.getInventory().getTitle();
-            inv.setTitle(title.substring(0, title.lastIndexOf(" "))
-                    + String.format(" %d/%d", i + 1, inventories.size() + 1));
+//            inv.setTitle(title.substring(0, title.lastIndexOf(" "))
+//                    + String.format(" %d/%d", i + 1, inventories.size() + 1));
         }
 
         int pagesSize = inventories.size();
