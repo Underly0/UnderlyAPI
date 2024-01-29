@@ -13,11 +13,13 @@ import java.util.stream.Collectors;
 public class StringUtil {
 
     public static String color(String text) {
+        text = ChatColor.translateAlternateColorCodes('&', text);
+
         int version = Integer.parseInt(Bukkit.getBukkitVersion().split("\\.")[1]);
         if (version >= 16)
-            text = FormatChatColor.stylish(text);
+            text = text.replaceAll("#([0-9a-fA-F]{6})", "§x§$1");
 
-        return ChatColor.translateAlternateColorCodes('&', text);
+        return text;
     }
 
     public static List<String> replaceObjects(List<String> list, Object... replace) {
