@@ -4,3 +4,6 @@ author: Underly0
 website: "https://github.com/Underly0/UnderlyAPI"
 main: me.underly0.underlyapi.APILoader
 api-version: 1.13
+depend:
+  - ProtocolLib
+  - ViaVersion
