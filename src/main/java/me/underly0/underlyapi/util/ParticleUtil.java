@@ -32,7 +32,6 @@ public class ParticleUtil {
     }};
     
     public ParticleColor getParticleColor(ChatColor color) {
-        TimeUtil.
         return colorList.get(color.getChar());
     }
 

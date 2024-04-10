@@ -1,9 +1,9 @@
 package me.underly0.underlyapi.common.menu;
 
+import me.underly0.underlyapi.api.menu.Menu;
 import me.underly0.underlyapi.builder.ItemBuilder;
 import me.underly0.underlyapi.util.StringUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -13,49 +13,51 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-public class Menu implements InventoryHolder {
+public class MenuImpl implements InventoryHolder, Cloneable, Menu {
 
-    private ConfigurationSection menuSection;
+
     private Inventory inventory;
     private List<String> inventoryWords;
-    private List<String> words;
+    private Map<String, Object> words;
     public final Map<Integer, MenuAction> actionSlots = new HashMap<>();
     private final Map<String, String> placeholders = new HashMap<>();
     private boolean isBuilded = false;
 
-    public Menu(ConfigurationSection menuSection) {
-        this.menuSection = menuSection;
+    public MenuImpl(Map<String, Object> values) {
+        String title = StringUtil.color((String) values.get("title"));
+        List<String> layout = (List<String>) values.get("inventory");
 
-        String title = StringUtil.color(menuSection.getString("title"));
-        this.inventoryWords = getInventoryWords(menuSection.getStringList("inventory"));
-        this.words = new ArrayList<>(menuSection.getConfigurationSection("words").getKeys(false));
+        this.words = (Map<String, Object>) values.get("words");
 
+        this.inventoryWords = getInventoryWords(layout);
         this.inventory = Bukkit.createInventory(this, inventoryWords.size(), title);
     }
 
 
-    public Menu cloneMenu() {
-        Menu clonedMenu = new Menu(this.menuSection);
-        clonedMenu.actionSlots.putAll(this.actionSlots);
-        clonedMenu.placeholders.putAll(this.placeholders);
 
-        if (this.isBuilded) {
-            clonedMenu.build();
-        }
-
-        return clonedMenu;
-    }
+//    public Menu cloneMenu() {
+//        Menu clonedMenu = new Menu(this.menuSection);
+//        clonedMenu.actionSlots.putAll(this.actionSlots);
+//        clonedMenu.placeholders.putAll(this.placeholders);
+//
+//        if (this.isBuilded) {
+//            clonedMenu.build();
+//        }
+//
+//        return clonedMenu;
+//    }
 
     public Menu build() {
         Map<String, List<Integer>> items = getItems();
 
         items.forEach((word, slots) -> {
-            setItems(
-                    new ItemBuilder(menuSection.getConfigurationSection("words." + word).getValues(false))
-                            .setPlaceholders(placeholders)
-                            .build(),
-                    slots
-            );
+            Map<String, Object> item = (Map<String, Object>) words.get(word);
+
+            ItemStack itemStack = new ItemBuilder(item)
+                    .setPlaceholders(placeholders)
+                    .build();
+
+            setItems(itemStack, slots);
         });
         this.isBuilded = true;
         return this;
@@ -75,14 +77,14 @@ public class Menu implements InventoryHolder {
         AtomicInteger index = new AtomicInteger();
 
         this.inventoryWords.forEach(invWord -> {
-            ConfigurationSection wordSection = this.menuSection.getConfigurationSection("words." + invWord);
+            Map<String, Object> item = (Map<String, Object>) words.get(invWord);
 
-            if (wordSection == null || !wordSection.isList("actions")) {
+            if (item == null || !item.containsKey("actions")) {
                 index.getAndIncrement();
                 return;
             }
 
-            wordSection.getStringList("actions")
+            ((List<String>) item.get("actions"))
                     .forEach(wordAction -> {
                         if (wordAction.equals(actionName)) {
                             this.actionSlots.put(index.get(), action);
@@ -124,10 +126,10 @@ public class Menu implements InventoryHolder {
     public Map<String, List<Integer>> getTypeItems(String type) {
         Map<String, List<Integer>> slots = new HashMap<>();
 
-        words.forEach(word -> {
-            ConfigurationSection wordSection = menuSection.getConfigurationSection("words." + word);
+        words.forEach((word, _item) -> {
+            Map<String, Object> item = (Map<String, Object>) _item;
 
-            if (!wordSection.contains("type") || !wordSection.getString("type").equals(type))
+            if (!item.containsKey("type") || !item.get("type").equals(type))
                 return;
 
             List<Integer> wordSlots = new ArrayList<>();
@@ -149,7 +151,7 @@ public class Menu implements InventoryHolder {
     private Map<String, List<Integer>> getItems() {
         Map<String, List<Integer>> slots = new HashMap<>();
 
-        words.forEach(word -> {
+        words.keySet().forEach(word -> {
             List<Integer> wordSlots = new ArrayList<>();
 
             AtomicInteger index = new AtomicInteger();
@@ -175,5 +177,14 @@ public class Menu implements InventoryHolder {
     @Override
     public Inventory getInventory() {
         return inventory;
+    }
+
+    @Override
+    public MenuImpl clone() {
+        try {
+            return (MenuImpl) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

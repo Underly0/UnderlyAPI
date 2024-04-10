@@ -1,5 +1,6 @@
 package me.underly0.underlyapi.common.menu;
 
+import me.underly0.underlyapi.api.menu.PagedMenu;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -7,39 +8,37 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PagedMenu {
+public class PagedMenuImpl implements PagedMenu {
 
-    private final List<Menu> pages = new ArrayList<>();
+    private final List<MenuImpl> pages = new ArrayList<>();
     private int page = 0;
     private int pageSize;
     private ItemStack backItem = new ItemStack(Material.BARRIER);
     private ItemStack nextItem = new ItemStack(Material.BARRIER);
 
-    public PagedMenu(Menu menu) {
+    public PagedMenuImpl(MenuImpl menu) {
         init(menu, 1);
     }
 
-    public PagedMenu(Menu menu, int pageSize) {
+    public PagedMenuImpl(MenuImpl menu, int pageSize) {
         init(menu, pageSize);
     }
 
-    public PagedMenu(Menu menu, List<CustomItem> items, String type) {
+    public PagedMenuImpl(MenuImpl menu, List<CustomItem> items, String type) {
         List<Integer> slots = new ArrayList<>();
         menu.getTypeItems(type).values().forEach(slots::addAll);
 
-        int pageSize = (int) Math.ceil((double) items.size() / slots.size());
-        if (pageSize < 1)
-            pageSize = 1;
+        int pageSize = (int) Math.max(1, Math.ceil((double) items.size() / slots.size()));
 
         init(menu, pageSize);
         setCustomItems(items, type);
     }
 
-    private void init(Menu menu, int pageSize) {
+    private void init(MenuImpl menu, int pageSize) {
         this.pageSize = pageSize;
 
         for (int i = 0; i < pageSize; i++) {
-            pages.add(menu.cloneMenu());
+            pages.add(menu.clone());
         }
     }
 
@@ -55,15 +54,15 @@ public class PagedMenu {
         return this;
     }
 
-    private void setBackItemToMenu(Menu menu) {
+    private void setBackItemToMenu(MenuImpl menu) {
         setPagedItemToMenu(menu, "back", backItem, (player, clickType) -> openBackPage(player));
     }
 
-    private void setNextItemToMenu(Menu menu) {
+    private void setNextItemToMenu(MenuImpl menu) {
         setPagedItemToMenu(menu, "next", nextItem, (player, clickType) -> openNextPage(player));
     }
 
-    private void setPagedItemToMenu(Menu menu, String type, ItemStack item, MenuAction action) {
+    private void setPagedItemToMenu(MenuImpl menu, String type, ItemStack item, MenuAction action) {
         menu.getTypeItems(type)
                 .values()
                 .forEach(list
@@ -75,8 +74,9 @@ public class PagedMenu {
     private void openNextPage(Player player) {
         this.page++;
 
-        if (this.page > pages.size() - 1)
+        if (this.page > pages.size() - 1) {
             return;
+        }
 
         pages.get(this.page).open(player);
     }
@@ -84,8 +84,9 @@ public class PagedMenu {
     private void openBackPage(Player player) {
         this.page--;
 
-        if (this.page < 0)
+        if (this.page < 0) {
             return;
+        }
 
         pages.get(this.page).open(player);
     }
@@ -109,7 +110,7 @@ public class PagedMenu {
             return;
         }
 
-        Menu menu = this.pages.get(page);
+        MenuImpl menu = this.pages.get(page);
 
         List<CustomItem> itemList = new ArrayList<>(items);
         List<Integer> slots = new ArrayList<>();
@@ -131,8 +132,11 @@ public class PagedMenu {
         }
     }
 
+    public void open(Player player, int page) {
+        this.pages.get(page).open(player);
+    }
     public void open(Player target) {
-        this.pages.get(0).open(target);
+        open(target.getPlayer(), 0);
     }
 
 }

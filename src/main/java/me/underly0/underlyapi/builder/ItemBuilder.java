@@ -149,7 +149,7 @@ public class ItemBuilder extends ItemStack {
         super.setItemMeta(meta);
     }
 
-    public ItemBuilder build() {
+    public ItemStack build() {
         if (getType() == Material.AIR || getType() == null) {
             super.setType(Material.STONE);
         }

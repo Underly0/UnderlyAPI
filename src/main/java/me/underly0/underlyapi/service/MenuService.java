@@ -1,58 +1,43 @@
 package me.underly0.underlyapi.service;
 
+import me.underly0.underlyapi.common.menu.MenuAction;
+import me.underly0.underlyapi.common.menu.MenuImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.Plugin;
-import me.underly0.underlyapi.api.menu.Menu;
-import me.underly0.underlyapi.api.menu.item.Item;
-import me.underly0.underlyapi.api.menu.listener.MenuListener;
 
-public class MenuService implements MenuListener {
+public class MenuService implements Listener {
 
     public MenuService(Plugin plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
 
-    public Menu getMenu(InventoryView view) {
+    public MenuImpl getMenu(InventoryView view) {
         Inventory inv = view.getTopInventory();
-        return !(inv.getHolder() instanceof Menu) ? null : (Menu) inv.getHolder();
+        return !(inv.getHolder() instanceof MenuImpl) ? null : (MenuImpl) inv.getHolder();
     }
 
-    @Override
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler()
     public void onClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
-        Menu menu = getMenu(event.getView());
+        MenuImpl menu = getMenu(event.getView());
 
-        if (menu == null) return;
-        event.setCancelled(true);
-
-        Item item = menu.findItemBySlot(event.getSlot());
-        if (item == null) return;
-
-        if (item.getAction() != null) {
-            item.getAction().function(player, event.getClick(), event.getSlot());
+        if (menu == null) {
+            return;
         }
-        player.updateInventory();
 
-    }
+        MenuAction action = menu.actionSlots.get(event.getSlot());
 
-    @Override
-    @EventHandler
-    public void onDrag(InventoryDragEvent event) {
+        if (action != null) {
+            action.onAction(player, event.getClick());
+        }
 
-    }
-
-    @Override
-    @EventHandler
-    public void onClose(InventoryCloseEvent event) {
+        event.setCancelled(true);
     }
 }
