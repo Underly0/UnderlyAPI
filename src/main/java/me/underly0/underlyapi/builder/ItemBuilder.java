@@ -6,8 +6,10 @@ import jdk.jfr.Description;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import me.underly0.underlyapi.util.StringUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -24,9 +26,9 @@ import java.util.concurrent.atomic.AtomicReference;
 public class ItemBuilder extends ItemStack {
     private Map<String, String> placeholders;
 
-    private Map<String, Object> section;
+    private ConfigurationSection section;
 
-    public ItemBuilder(Map<String, Object> section) {
+    public ItemBuilder(ConfigurationSection section) {
         this.section = section;
     }
 
@@ -57,7 +59,11 @@ public class ItemBuilder extends ItemStack {
         if (material[0].length() > 30) {
             skull(material[0]);
         } else {
-            super.setType(Material.valueOf(material[0].toUpperCase()));
+            if (StringUtils.isNumeric(material[0])) {
+                super.setType(Material.getMaterial(Integer.parseInt(material[0])));
+            } else {
+                super.setType(Material.valueOf(material[0].toUpperCase()));
+            }
         }
 
         if (material.length == 2) {
@@ -151,57 +157,57 @@ public class ItemBuilder extends ItemStack {
 
     public ItemStack build() {
         if (getType() == Material.AIR || getType() == null) {
-            super.setType(Material.STONE);
+            super.setType(Material.AIR);
         }
 
-        section.forEach((key, value) -> {
+        section.getKeys(false).forEach(key -> {
             switch (key.toLowerCase()) {
                 case "material": {
-                    setMaterial(((String) value).split(":"));
+                    setMaterial(section.getString(key).split(":"));
                     return;
                 }
                 case "title": {
-                    setTitle(((String) value));
+                    setTitle(section.getString(key));
                     return;
                 }
                 case "lore": {
-                    setLore(((List<String>) value));
+                    setLore(section.getStringList(key));
                     return;
                 }
                 case "enchants": {
-                    setEnchants((List<String>) value);
+                    setEnchants(section.getStringList(key));
                     return;
                 }
                 case "potion_color": {
-                    setPotionColor(((String) value));
+                    setPotionColor(section.getString(key));
                     return;
                 }
                 case "glowing": {
-                    if (!((boolean) value))
+                    if (!section.getBoolean(key))
                         return;
                     setGlowing();
                     return;
                 }
                 case "hide_enchants": {
-                    if (!((boolean) value))
+                    if (!section.getBoolean(key))
                         return;
                     setHideEnchants();
                     return;
                 }
                 case "hide_attributes": {
-                    if (!((boolean) value))
+                    if (!section.getBoolean(key))
                         return;
                     setHideAttributes();
                     return;
                 }
                 case "hide_potion_effects": {
-                    if (!((boolean) value))
+                    if (!section.getBoolean(key))
                         return;
                     setHidePotionEffects();
                     return;
                 }
                 case "amount": {
-                    setAmount(((int) value));
+                    setAmount(section.getInt(key));
                     return;
                 }
             }

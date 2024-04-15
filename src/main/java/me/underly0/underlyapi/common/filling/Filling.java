@@ -1,59 +1,81 @@
 package me.underly0.underlyapi.common.filling;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import me.underly0.underlyapi.common.object.Points;
 import me.underly0.underlyapi.util.LocationUtil;
 import org.bukkit.Location;
 import org.bukkit.material.MaterialData;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Consumer;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Getter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Filling {
-    Points points;
-    Function<Location, MaterialData> function;
-    long delay;
+    final Plugin plugin;
+    final Points points;
+    final Function<Location, MaterialData> function;
+    final long delay;
+    final int sleepInterval;
 
-    private final ExecutorService service;
+    boolean generate;
 
-    public Filling(Points points, Function<Location, MaterialData> function, long delay) {
+    BukkitRunnable bukkitRunnable;
+
+    public Filling(Plugin plugin, Points points, Function<Location, MaterialData> function, long delay, int sleepInterval) {
+        this.plugin = plugin;
         this.points = points;
         this.function = function;
         this.delay = delay;
-
-        this.service = Executors.newSingleThreadExecutor();
+        this.sleepInterval = sleepInterval;
     }
 
     @SneakyThrows
     public void start(Class<? extends AbstractFilling> clazz) {
         AbstractFilling generator = clazz.getConstructor(Points.class).newInstance(points);
 
-        service.execute(() -> fill(generator));
+        generate = true;
+        bukkitRunnable = new BukkitRunnable() {
+            @Override
+            public void run() {
+                fill(generator);
+            }
+        };
+        bukkitRunnable.runTaskAsynchronously(plugin);
     }
 
     @SneakyThrows
     private void fill(AbstractFilling generator) {
+        AtomicInteger atomicInteger = new AtomicInteger();
         Consumer<Location> consumer = location -> {
 
             MaterialData material = function.apply(location);
             LocationUtil.setBlock(location, material);
 
-            sleep();
+            boolean isSleep = atomicInteger.incrementAndGet() % sleepInterval == 0;
+            sleep(isSleep);
         };
 
+
         generator.start(consumer);
+        generate = false;
     }
 
     @SneakyThrows
-    private void sleep() {
-        Thread.sleep(delay);
+    private void sleep(boolean sleep) {
+        if (sleep) {
+            Thread.sleep(delay);
+        }
     }
-
+    public void kill() {
+        bukkitRunnable.cancel();
+    }
 
 }

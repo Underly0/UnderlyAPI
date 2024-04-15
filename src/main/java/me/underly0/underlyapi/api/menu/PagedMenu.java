@@ -1,6 +1,6 @@
 package me.underly0.underlyapi.api.menu;
 
-import me.underly0.underlyapi.common.menu.CustomItem;
+import me.underly0.underlyapi.common.menu.item.CustomItem;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -15,4 +15,5 @@ public interface PagedMenu {
     void setCustomItems(int page, List<CustomItem> items, String type);
 
     void open(Player target);
+    PagedMenu build();
 }

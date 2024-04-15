@@ -1,6 +1,7 @@
-package me.underly0.underlyapi.common.menu;
+package me.underly0.underlyapi.common.menu.item;
 
 import lombok.Getter;
+import me.underly0.underlyapi.common.menu.action.MenuAction;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;

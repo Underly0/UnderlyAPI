@@ -13,11 +13,12 @@ public class Layers extends AbstractFilling {
 
     @Override
     public void start(Consumer<Location> consumer) {
+
         for (int y = super.getMinY(); y <= super.getMaxY(); y++) {
             for (int x = super.getMinX(); x <= super.getMaxX(); x++) {
                 for (int z = super.getMinZ(); z <= super.getMaxZ(); z++) {
 
-                    Location location = new Location(super.getWorld(), x, y, z);
+                    Location location = new Location(super.getPoints().getWorld(), x, y, z);
                     consumer.accept(location);
                 }
             }

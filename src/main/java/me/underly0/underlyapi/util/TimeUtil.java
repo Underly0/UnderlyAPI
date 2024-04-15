@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -70,7 +71,7 @@ public class TimeUtil {
 
         long[] time = splitTime(seconds);
 
-        return IntStream.range(0, units.length)
+        return IntStream.range(0, time.length)
                 .filter(i -> time[i] > 0)
                 .mapToObj(i -> StringUtil.declensions(time[i], units[i], ""))
                 .collect(Collectors.joining(" "));
@@ -83,7 +84,7 @@ public class TimeUtil {
 
         long[] time = splitTime(seconds);
 
-        return IntStream.range(0, units.length)
+        return IntStream.range(0, time.length)
                 .filter(i -> time[i] > 0)
                 .mapToObj(i -> time[i] + units[0][i])
                 .collect(Collectors.joining(" "));

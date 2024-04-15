@@ -1,7 +1,9 @@
 package me.underly0.underlyapi.service;
 
-import me.underly0.underlyapi.common.menu.MenuAction;
 import me.underly0.underlyapi.common.menu.MenuImpl;
+import me.underly0.underlyapi.common.menu.action.AbstractMenuQuoteAction;
+import me.underly0.underlyapi.common.menu.action.IMenuAction;
+import me.underly0.underlyapi.common.menu.action.MenuAction;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,6 +12,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.Plugin;
+
+import java.util.List;
 
 public class MenuService implements Listener {
 
@@ -32,12 +36,24 @@ public class MenuService implements Listener {
             return;
         }
 
-        MenuAction action = menu.actionSlots.get(event.getSlot());
+        event.setCancelled(true);
 
-        if (action != null) {
-            action.onAction(player, event.getClick());
+        List<IMenuAction> actions = menu.actionSlots.get(event.getSlot());
+
+        if (actions == null) {
+            return;
         }
 
-        event.setCancelled(true);
+        actions.forEach(action -> {
+            if (action != null) {
+                if (action instanceof AbstractMenuQuoteAction) {
+                    AbstractMenuQuoteAction quoteAction = (AbstractMenuQuoteAction) action;
+                    quoteAction.onAction(player, event.getClick(), quoteAction.getQuote());
+                } else {
+                    ((MenuAction) action).onAction(player, event.getClick());
+                }
+            }
+        });
+
     }
 }

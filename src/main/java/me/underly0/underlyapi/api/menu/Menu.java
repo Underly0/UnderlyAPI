@@ -1,7 +1,8 @@
 package me.underly0.underlyapi.api.menu;
 
-import me.underly0.underlyapi.common.menu.CustomItem;
-import me.underly0.underlyapi.common.menu.MenuAction;
+import me.underly0.underlyapi.common.menu.action.MenuQuoteAction;
+import me.underly0.underlyapi.common.menu.item.CustomItem;
+import me.underly0.underlyapi.common.menu.action.MenuAction;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -17,6 +18,7 @@ public interface Menu {
     Menu addPlaceholders(Map<String, String> placeholders);
 
     void addAction(String actionName, MenuAction action);
+    void addQuoteAction(String actionName, MenuQuoteAction action);
 
     void open(Player target);
 

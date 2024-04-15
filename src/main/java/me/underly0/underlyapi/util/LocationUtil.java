@@ -2,6 +2,7 @@ package me.underly0.underlyapi.util;
 
 import lombok.experimental.UtilityClass;
 import me.underly0.underlyapi.APILoader;
+import me.underly0.underlyapi.common.object.Points;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;

@@ -25,10 +25,6 @@ public abstract class AbstractFile {
 
         this.file = new File(plugin.getDataFolder(), fileName);
 
-        if (!file.isDirectory()) {
-            file.mkdir();
-        }
-
         if (!file.exists()) {
             plugin.saveResource(fileName, false);
         }

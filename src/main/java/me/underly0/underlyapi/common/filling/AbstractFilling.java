@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import me.underly0.underlyapi.common.object.Points;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.util.Consumer;
 import org.bukkit.util.Vector;
 
@@ -13,16 +12,21 @@ import org.bukkit.util.Vector;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Getter
 public abstract class AbstractFilling {
-    World world;
-    Vector min;
-    Vector max;
+    Points points;
 
-    int minX, minY, minZ;
-    int maxX, maxY, maxZ;
+    int minX;
+    int minY;
+    int minZ;
+
+    int maxX;
+    int maxY;
+    int maxZ;
+
     protected AbstractFilling(Points points) {
-        this.world = points.getWorld();
-        this.min = points.getMin();
-        this.max = points.getMax();
+        this.points = points;
+
+        Vector min = points.getMin();
+        Vector max = points.getMax();
 
         this.minX = min.getBlockX();
         this.minY = min.getBlockY();

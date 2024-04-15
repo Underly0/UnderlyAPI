@@ -1,6 +1,9 @@
 package me.underly0.underlyapi.common.menu;
 
+import me.underly0.underlyapi.api.menu.Menu;
 import me.underly0.underlyapi.api.menu.PagedMenu;
+import me.underly0.underlyapi.common.menu.action.MenuAction;
+import me.underly0.underlyapi.common.menu.item.CustomItem;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -10,21 +13,21 @@ import java.util.List;
 
 public class PagedMenuImpl implements PagedMenu {
 
-    private final List<MenuImpl> pages = new ArrayList<>();
+    private final List<Menu> pages = new ArrayList<>();
     private int page = 0;
     private int pageSize;
     private ItemStack backItem = new ItemStack(Material.BARRIER);
     private ItemStack nextItem = new ItemStack(Material.BARRIER);
 
-    public PagedMenuImpl(MenuImpl menu) {
+    public PagedMenuImpl(Menu menu) {
         init(menu, 1);
     }
 
-    public PagedMenuImpl(MenuImpl menu, int pageSize) {
+    public PagedMenuImpl(Menu menu, int pageSize) {
         init(menu, pageSize);
     }
 
-    public PagedMenuImpl(MenuImpl menu, List<CustomItem> items, String type) {
+    public PagedMenuImpl(Menu menu, List<CustomItem> items, String type) {
         List<Integer> slots = new ArrayList<>();
         menu.getTypeItems(type).values().forEach(slots::addAll);
 
@@ -34,11 +37,11 @@ public class PagedMenuImpl implements PagedMenu {
         setCustomItems(items, type);
     }
 
-    private void init(MenuImpl menu, int pageSize) {
+    private void init(Menu menu, int pageSize) {
         this.pageSize = pageSize;
 
         for (int i = 0; i < pageSize; i++) {
-            pages.add(menu.clone());
+            pages.add(((MenuImpl) menu).clone());
         }
     }
 
@@ -54,15 +57,15 @@ public class PagedMenuImpl implements PagedMenu {
         return this;
     }
 
-    private void setBackItemToMenu(MenuImpl menu) {
+    private void setBackItemToMenu(Menu menu) {
         setPagedItemToMenu(menu, "back", backItem, (player, clickType) -> openBackPage(player));
     }
 
-    private void setNextItemToMenu(MenuImpl menu) {
+    private void setNextItemToMenu(Menu menu) {
         setPagedItemToMenu(menu, "next", nextItem, (player, clickType) -> openNextPage(player));
     }
 
-    private void setPagedItemToMenu(MenuImpl menu, String type, ItemStack item, MenuAction action) {
+    private void setPagedItemToMenu(Menu menu, String type, ItemStack item, MenuAction action) {
         menu.getTypeItems(type)
                 .values()
                 .forEach(list
@@ -110,7 +113,7 @@ public class PagedMenuImpl implements PagedMenu {
             return;
         }
 
-        MenuImpl menu = this.pages.get(page);
+        Menu menu = this.pages.get(page);
 
         List<CustomItem> itemList = new ArrayList<>(items);
         List<Integer> slots = new ArrayList<>();

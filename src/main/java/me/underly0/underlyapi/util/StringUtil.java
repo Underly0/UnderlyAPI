@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @UtilityClass
@@ -19,6 +20,10 @@ public class StringUtil {
 //            text = text.replaceAll("#([0-9a-fA-F]{6})", "§x§$1");
 
         return text;
+    }
+
+    public static String splitQuote(String quote, String string) {
+        return string.split(Pattern.quote(String.format("%s ", quote)))[1];
     }
     public List<String> color(List<String> list) {
         return mapList(list, StringUtil::color);
@@ -55,7 +60,7 @@ public class StringUtil {
         last = point % 10;
         String result = (last == 0 || last > 4) ? units[2] : (last == 1) ? units[0] : units[1];
 
-        return point + delimiter + result.trim();
+        return point + delimiter + result;
     }
     public String declensions(long point, String[] units) {
         return declensions(point, units, " ");
