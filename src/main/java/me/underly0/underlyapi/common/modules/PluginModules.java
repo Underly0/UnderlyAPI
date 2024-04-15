@@ -16,10 +16,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -33,7 +30,7 @@ public class PluginModules {
 
         String pathModules = APILoader.getInstance().getDataFolder() + File.separator + "modules";
         File modulesDirectory = new File(pathModules);
-        modulesDirectory.mkdir();
+        modulesDirectory.mkdirs();
 
         List<ModuleLoader> modules = getPlugins(modulesDirectory);
         modules.forEach(moduleLoader -> {
@@ -87,10 +84,14 @@ public class PluginModules {
         FileConfiguration cfgModule = YamlConfiguration.loadConfiguration(reader);
 
         ModuleConfig moduleConfig = ModuleConfig.of(cfgModule);
+        System.out.println("moduleConfig.getMain() = " + moduleConfig.getMain());
 
         URL[] urls = {file.toURI().toURL()};
+        System.out.println(Arrays.toString(urls));
         @Cleanup URLClassLoader classLoader = new URLClassLoader(urls);
+        System.out.println(classLoader);
         Class<?> mainClass = classLoader.loadClass(moduleConfig.getMain());
+
         Constructor<?> constructor = mainClass.getConstructor();
 
         PluginModule pluginModule = (PluginModule) constructor.newInstance();
