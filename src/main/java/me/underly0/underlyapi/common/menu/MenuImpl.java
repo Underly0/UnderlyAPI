@@ -1,17 +1,16 @@
 package me.underly0.underlyapi.common.menu;
 
 import me.underly0.underlyapi.api.menu.Menu;
+import me.underly0.underlyapi.api.menu.item.CustomItem;
 import me.underly0.underlyapi.builder.ItemBuilder;
 import me.underly0.underlyapi.common.menu.action.AbstractMenuQuoteAction;
-import me.underly0.underlyapi.common.menu.action.IMenuAction;
-import me.underly0.underlyapi.common.menu.action.MenuAction;
-import me.underly0.underlyapi.common.menu.action.MenuQuoteAction;
-import me.underly0.underlyapi.common.menu.item.CustomItem;
+import me.underly0.underlyapi.api.menu.action.IMenuAction;
+import me.underly0.underlyapi.api.menu.action.MenuAction;
+import me.underly0.underlyapi.api.menu.action.MenuQuoteAction;
 import me.underly0.underlyapi.util.MapUtil;
 import me.underly0.underlyapi.util.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;

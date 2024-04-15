@@ -2,8 +2,9 @@ package me.underly0.underlyapi.common.menu;
 
 import me.underly0.underlyapi.api.menu.Menu;
 import me.underly0.underlyapi.api.menu.PagedMenu;
-import me.underly0.underlyapi.common.menu.action.MenuAction;
-import me.underly0.underlyapi.common.menu.item.CustomItem;
+import me.underly0.underlyapi.api.menu.item.CustomItem;
+import me.underly0.underlyapi.api.menu.action.MenuAction;
+import me.underly0.underlyapi.common.menu.item.CustomItemImpl;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -70,7 +71,7 @@ public class PagedMenuImpl implements PagedMenu {
                 .values()
                 .forEach(list
                         -> list.forEach(slot
-                        -> menu.setCustomItem(new CustomItem(item, action, slot)))
+                        -> menu.setCustomItem(new CustomItemImpl(item, action, slot)))
                 );
     }
 

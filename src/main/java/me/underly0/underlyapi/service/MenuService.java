@@ -1,9 +1,10 @@
 package me.underly0.underlyapi.service;
 
+import me.underly0.underlyapi.APILoader;
 import me.underly0.underlyapi.common.menu.MenuImpl;
 import me.underly0.underlyapi.common.menu.action.AbstractMenuQuoteAction;
-import me.underly0.underlyapi.common.menu.action.IMenuAction;
-import me.underly0.underlyapi.common.menu.action.MenuAction;
+import me.underly0.underlyapi.api.menu.action.IMenuAction;
+import me.underly0.underlyapi.api.menu.action.MenuAction;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,8 +18,8 @@ import java.util.List;
 
 public class MenuService implements Listener {
 
-    public MenuService(Plugin plugin) {
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+    public MenuService() {
+        Bukkit.getPluginManager().registerEvents(this, APILoader.getInstance());
     }
 
 

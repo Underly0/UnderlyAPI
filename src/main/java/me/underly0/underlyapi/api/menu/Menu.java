@@ -1,8 +1,8 @@
 package me.underly0.underlyapi.api.menu;
 
-import me.underly0.underlyapi.common.menu.action.MenuQuoteAction;
-import me.underly0.underlyapi.common.menu.item.CustomItem;
-import me.underly0.underlyapi.common.menu.action.MenuAction;
+import me.underly0.underlyapi.api.menu.item.CustomItem;
+import me.underly0.underlyapi.api.menu.action.MenuAction;
+import me.underly0.underlyapi.api.menu.action.MenuQuoteAction;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 

@@ -27,7 +27,7 @@ public class TabCompleteBuilder {
     private final CommandSender sender;
     private final String[] args;
     private final SearchType type;
-    private SimpleComplete complete;
+    private TabCompleteWrapper complete;
 
     @SafeVarargs
     public final TabCompleteBuilder addComplete(int index, Pair<List<String>, String>... completes) {
@@ -54,7 +54,7 @@ public class TabCompleteBuilder {
             return this;
         }
 
-        this.complete = new SimpleComplete(type, null, permission);
+        this.complete = new TabCompleteWrapper(type, null, permission);
         return this;
     }
 
@@ -62,7 +62,7 @@ public class TabCompleteBuilder {
         return args[args.length - 1];
     }
 
-    public SimpleComplete filteredList(List<Pair<List<String>, String>> lines, String lastArg) {
+    public TabCompleteWrapper filteredList(List<Pair<List<String>, String>> lines, String lastArg) {
         List<String> filteredComplete = new ArrayList<>();
 
         lines.forEach(line -> filteredComplete.addAll(line.getFirst().stream()
@@ -71,8 +71,8 @@ public class TabCompleteBuilder {
                 .collect(Collectors.toList())));
 
         return filteredComplete.isEmpty()
-                ? new SimpleComplete(CompleteType.NONE, Collections.emptyList(), null)
-                : new SimpleComplete(CompleteType.CUSTOM, filteredComplete, null);
+                ? new TabCompleteWrapper(CompleteType.NONE, Collections.emptyList(), null)
+                : new TabCompleteWrapper(CompleteType.CUSTOM, filteredComplete, null);
     }
 
     public List<String> getFilteredPlayers() {
@@ -87,7 +87,7 @@ public class TabCompleteBuilder {
 
     @AllArgsConstructor
     @Getter
-    public static class SimpleComplete {
+    public static class TabCompleteWrapper {
         private final CompleteType type;
         private final List<String> complete;
         private final String permission;

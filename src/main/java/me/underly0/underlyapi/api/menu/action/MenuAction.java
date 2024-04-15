@@ -1,4 +1,4 @@
-package me.underly0.underlyapi.common.menu.action;
+package me.underly0.underlyapi.api.menu.action;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
